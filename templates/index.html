@@ -305,6 +305,12 @@
                 </button>
             </form>
 
+            {% if checker_error %}
+                <p class="generator-error">
+                    ⚠ {{ checker_error }}
+                </p>
+            {% endif %}
+
             {% if score is defined and score is not none %}
                 <h2>
                     {{status}}

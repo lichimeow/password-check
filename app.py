@@ -4,6 +4,7 @@ from generator import gener
 app = Flask(__name__)
 @app.route("/", methods=["GET","POST"])
 def index():
+    check_error = None
     generator_error = None
     score=None
     advice=[]
@@ -13,16 +14,19 @@ def index():
     if request.method =="POST":
         if "check" in request.form:
             password = request.form.get("password", "")
-            score, advice = pass_score(password)
-            if score is not None:
+            if password == "":
+                check_error = "Введите пароль для проверки."
+            else:
+                score, advice = pass_score(password)
+                if score is not None:
                     if score<40:
                         status = "Слабый пароль"
                     elif score < 70:
                         status  = "Средний пароль"
                     else:
                         status = "Надёжный пароль"
-            else:
-                status = None
+                else:
+                    status = None
         elif "generate" in request.form:
             length = int(request.form.get("length",16))
             lowercase = "lowercase" in request.form
@@ -56,6 +60,7 @@ def index():
         advice=advice,
         password=password,
         generated=generated,
+        check_error=check_error,
         generator_error=generator_error
         )
 if __name__ == "__main__":
